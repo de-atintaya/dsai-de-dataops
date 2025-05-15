@@ -6,7 +6,7 @@ on:
       - 'feature/**'
   pull_request:
     branches:
-      - development
+      - develop
 
 jobs:
   ci:
