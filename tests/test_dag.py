@@ -1,6 +1,6 @@
 import pytest
 from airflow.models import DagBag
-from dags.ejemplo_dag import dag
+from dags.dag_ejemplo import dag
 
 def test_dag_importado_sin_errores():
     """
