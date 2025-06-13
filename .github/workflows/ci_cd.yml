@@ -31,8 +31,8 @@ jobs:
     - name: Validar sintaxis de los DAGs
       run: python -m py_compile dags/*.py
 
-    - name: Linter (simulado)
-      run: echo "✅ Aquí se correría un linter como ruff o flake8"
+    - name: Ejecutar flake8 (linter)
+      run: flake8 dags/ tests/
 
     - name: Ejecutar pruebas unitarias
       run: pytest tests/
