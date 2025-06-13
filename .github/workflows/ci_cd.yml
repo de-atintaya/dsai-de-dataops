@@ -47,7 +47,8 @@ jobs:
       run: bandit -r dags/
     
     - name: Escaneo de dependencias con Safety
-      run: safety scan --file=requirements.txt
+      run: safety check --full-report -r requirements.txt
+      # run: safety scan --file=requirements.txt
 
   cd:
     name: CD - Desplegar DAG si es PR a development
