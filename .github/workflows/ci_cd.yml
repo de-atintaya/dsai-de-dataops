@@ -26,22 +26,30 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Instalar dependencias de desarrollo
+      run: pip install -r requirements-dev.txt
     - name: Agregar directorio raíz al PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
     - name: Validar sintaxis de los DAGs
       run: python -m py_compile dags/*.py
 
-    - name: Linter (simulado)
-      run: echo "✅ Aquí se correría un linter como ruff o flake8"
+    - name: Ejecutar flake8 (sin romper build) - linter
+      run: |
+        flake8 dags/ tests/ || true
 
     - name: Ejecutar pruebas unitarias
       run: pytest tests/
 
-    - name: Validar convenciones de nombres (simulado)
-      run: echo "✅ Validar que los DAGs sigan convención de nombres"
+    - name: Validar convenciones de nombres de DAGs
+      run: python scripts/validar_nombres_dag.py
 
-    - name: Escaneo de seguridad (simulado)
-      run: echo "✅ Se ejecutaría un escáner como bandit o safety"
+    - name: Escaneo de seguridad con Bandit
+      run: bandit -r dags/
+    
+    - name: Escaneo de dependencias con Safety
+      # run: safety scan --file=requirements.txt
+      run: |
+        safety check --full-report -r requirements.txt || true
 
   cd:
     name: CD - Desplegar DAG si es PR a development
