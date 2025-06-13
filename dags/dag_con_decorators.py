@@ -2,12 +2,12 @@ from airflow.decorators import dag, task
 from datetime import datetime
 
 def generar_saludo(nombre):
-    return f"Hola, {nombre}!"
+    return f"¡Hola, {nombre}!"
 
 @dag(
     dag_id="dag_con_decorators",
     start_date=datetime(2023, 1, 1),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     tags=["ejemplo"]
 )
