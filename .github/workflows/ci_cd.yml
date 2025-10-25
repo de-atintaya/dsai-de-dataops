@@ -63,13 +63,13 @@ jobs:
 
     - name: Simular empaquetado del DAG
       run: |
-        echo "📦 Empaquetando DAGs para despliegue..."
+        echo "Empaquetando DAGs para despliegue..."
         tar -czf dags.tar.gz dags/
 
     - name: Simular subida a servidor de Airflow
       run: |
-        echo "🚀 Subiendo DAGs al entorno productivo (simulado)"
+        echo "Subiendo DAGs al entorno productivo (simulado)"
         echo "scp dags.tar.gz usuario@airflow-servidor:/home/airflow/dags/"
 
     - name: Simular reinicio de servicio de Airflow
-      run: echo "🔁 Reiniciando Airflow (simulado)"
+      run: echo "Reiniciando Airflow (simulado)"
