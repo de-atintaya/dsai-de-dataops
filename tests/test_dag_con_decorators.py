@@ -25,4 +25,4 @@ def test_dag_existe_y_tiene_tareas():
 
 def test_generar_saludo():
     resultado = generar_saludo("DataOps")
-    assert resultado == "Hola, DataOps!"
+    assert resultado == "¡Hola, DataOps!"
