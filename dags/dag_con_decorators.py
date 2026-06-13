@@ -7,7 +7,7 @@ def generar_saludo(nombre):
 
 
 @dag(
-    dag_id="dg_con_decorators",
+    dag_id="dag_con_decorators",
     start_date=datetime(2023, 1, 1),
     schedule=None,
     catchup=False,
