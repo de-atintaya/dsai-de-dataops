@@ -14,38 +14,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Downloads the repository contents into the runner so the workflow can access all project files
     - name: Checkout del código
       uses: actions/checkout@v3
 
+    # Installs the specified Python version on the runner machine so subsequent steps can use it
     - name: Configurar Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
+    # Upgrades pip to the latest version, then installs Apache Airflow and other packages the DAGs need to run
     - name: Instalar dependencias
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    # Installs dev-only tools (pytest, flake8, bandit, safety) that are needed in CI but not in production
     - name: Instalar dependencias de desarrollo
       run: pip install -r requirements-dev.txt
+
+    # Adds the project root to Python's module search path so tests can import DAGs with 'from dags.xxx import'
     - name: Agregar directorio raíz al PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+
+    # py_compile checks each DAG file for Python syntax errors without executing it; fails the pipeline if any file is invalid
     - name: Validar sintaxis de los DAGs
       run: python -m py_compile dags/*.py
 
+    # flake8 checks that code follows PEP 8 style guidelines (indentation, line length, unused imports, etc.); || true shows warnings without failing the pipeline
     - name: Ejecutar flake8 (sin romper build) - linter
       run: |
         flake8 dags/ tests/ || true
 
+    # pytest discovers and runs all test files in tests/; fails the pipeline if any test assertion does not pass
     - name: Ejecutar pruebas unitarias
       run: pytest tests/
 
+    # Custom script that enforces all DAG IDs start with 'dag_' and use only lowercase letters and underscores; exits with code 1 if any DAG violates the rule
     - name: Validar convenciones de nombres de DAGs
       run: python scripts/validar_nombres_dag.py
 
+    # Bandit is a security linter for Python; -r scans all files recursively inside dags/ and reports common vulnerabilities like hardcoded passwords or unsafe calls
     - name: Escaneo de seguridad con Bandit
       run: bandit -r dags/
-    
+
+    # Safety checks each package in requirements.txt against a database of known CVEs; || true shows the full report without blocking the pipeline
     - name: Escaneo de dependencias con Safety
       # run: safety scan --file=requirements.txt
       run: |
@@ -58,18 +72,22 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
+    # Downloads the repository code so the CD job can access the DAG files to package and deploy
     - name: Checkout del código
       uses: actions/checkout@v3
 
+    # tar compresses the dags/ folder into a .tar.gz archive, simulating how DAG files would be bundled before being sent to a server
     - name: Simular empaquetado del DAG
       run: |
         echo "Empaquetando DAGs para despliegue..."
         tar -czf dags.tar.gz dags/
 
+    # In a real pipeline this scp command would copy the package to the Airflow server; here it is only printed to illustrate what the step would do
     - name: Simular subida a servidor de Airflow
       run: |
         echo "Subiendo DAGs al entorno productivo (simulado)"
         echo "scp dags.tar.gz usuario@airflow-servidor:/home/airflow/dags/"
 
+    # In production this would restart the Airflow scheduler so it picks up the newly deployed DAGs
     - name: Simular reinicio de servicio de Airflow
       run: echo "Reiniciando Airflow (simulado)"
