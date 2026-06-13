@@ -115,3 +115,5 @@ In any DAG file, introduce a Python syntax error (for example, remove a closing 
 ---
 
 After each intentional break, commit and push to a `feature/` branch, open a PR to `develop`, and observe which step turns red in the **GitHub Actions** tab. Fix the issue, push again, and confirm the pipeline goes green.
+
+Testeado en DSAI Sección 1
