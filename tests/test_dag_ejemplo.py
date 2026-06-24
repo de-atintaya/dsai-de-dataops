@@ -9,7 +9,6 @@ def test_dag_importado_sin_errores():
     """
     dag_bag = DagBag(dag_folder="dags", include_examples=False)
     assert len(dag_bag.import_errors) == 0, f"Errores de importación: {dag_bag.import_errors}"
-    assert "dag_de_prueba" in dag_bag.dags
 
 def test_dag_existe_y_tiene_tareas():
     """
