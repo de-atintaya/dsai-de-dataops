@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def generar_saludo(nombre):
-    return f"¡Hola, {nombre}!"
+    return f"Hola, {nombre}"
 
 
 @dag(
